@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>don't gamble system</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>don't gamble system</h1>
+        
+        <!-- Main Game Area -->
+        <div class="main-game-area">
+            <!-- Equipment Section -->
+            <div class="equipment-section">
+                <div class="equipment-header">
+                    <h2>Equipment</h2>
+                    <div class="equipment-selection">
+                        <label for="equipment-select">Select Equipment:</label>
+                    <select id="equipment-select">
+                        <option value="blackfist-cloak">Blackfist Cloak</option>
+                        <option value="vl-shoes">VL Shoes</option>
+                        <option value="bwg">BWG</option>
+                        <option value="roa">ROA</option>
+                        <option value="spectrum-goggles">Spectrum Goggles</option>
+                        <option value="stormcaster-gloves">Stormcaster Gloves</option>
+                        <option value="von-leon-belt">Von Leon's Belt</option>
+                    </select>
+                    </div>
+                </div>
+                
+                <!-- 裝備顯示區域 -->
+                <div class="equipment-display-area">
+                    <div class="equipment-slot" id="equipment-slot">
+                        <div class="equipment-item" id="blackfist-cloak" data-type="blackfist-cloak">
+                            <img src="blackfist cape.JPG" alt="Blackfist Cloak" class="equipment-image">
+                            <div class="equipment-stats" id="equipment-stats">
+                                <!-- 屬性將由JavaScript動態生成 -->
+                            </div>
+                            <div class="scroll-uses">Upgrades Available: <span id="scroll-uses">5</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 自定義屬性區域 - 移到裝備下方 -->
+                    <div class="custom-stats-section">
+                        <h3>Custom Initial Stats</h3>
+                        <div class="stats-inputs">
+                            <div class="stat-input-group">
+                                <label for="custom-hp">HP:</label>
+                                <input type="number" id="custom-hp" min="0" max="999" value="120">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-weapon-attack">Weapon Attack:</label>
+                                <input type="number" id="custom-weapon-attack" min="0" max="999" value="10">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-weapon-defence">Weapon Defence:</label>
+                                <input type="number" id="custom-weapon-defence" min="0" max="999" value="43">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-magic-defence">Magic Defence:</label>
+                                <input type="number" id="custom-magic-defence" min="0" max="999" value="48">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-str">STR:</label>
+                                <input type="number" id="custom-str" min="0" max="999" value="0">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-dex">DEX:</label>
+                                <input type="number" id="custom-dex" min="0" max="999" value="0">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-int">INT:</label>
+                                <input type="number" id="custom-int" min="0" max="999" value="0">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-luk">LUK:</label>
+                                <input type="number" id="custom-luk" min="0" max="999" value="0">
+                            </div>
+                            <div class="stat-input-group">
+                                <label for="custom-speed">Speed:</label>
+                                <input type="number" id="custom-speed" min="0" max="999" value="0">
+                            </div>
+                        </div>
+                        
+                        <!-- 升級次數設定 -->
+                        <div class="upgrade-settings">
+                            <h4>Upgrade Settings</h4>
+                            <div class="upgrade-input-group">
+                                <label for="custom-scroll-uses">Upgrades Available:</label>
+                                <input type="number" id="custom-scroll-uses" min="0" max="50" value="5">
+                            </div>
+                        </div>
+                        
+                        <button id="apply-custom-stats" class="apply-button">Apply Custom Stats</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scrolls Section - 移到裝備旁邊 -->
+            <div class="scrolls-section">
+                <h2>Scrolls</h2>
+                <div class="scrolls-container">
+                    <div class="scroll-item" id="chaos-scroll" draggable="true">
+                        <img src="CS.JPG" alt="Chaos Scroll" class="scroll-image">
+                        <div class="scroll-name">Chaos Scroll (CS)</div>
+                        <div class="scroll-info">Success Rate: 60%</div>
+                        <div class="scroll-info" style="font-size: 0.7em; color: #999;">Drag to equipment to use</div>
+                    </div>
+                    <div class="scroll-item" id="white-scroll" draggable="true">
+                        <img src="ws.JPG" alt="White Scroll" class="scroll-image">
+                        <div class="scroll-name">White Scroll (WS)</div>
+                        <div class="scroll-info">Protects upgrade count</div>
+                    </div>
+                    <div class="scroll-item" id="vl-chaos-scroll" draggable="true">
+                        <img src="VL CS.JPG" alt="VL Chaos Scroll" class="scroll-image">
+                        <div class="scroll-name">VL Chaos Scroll (VL CS)</div>
+                        <div class="scroll-info">Success Rate: 100%</div>
+                        <div class="scroll-info" style="font-size: 0.7em; color: #999;">Range: +2 to -2</div>
+                    </div>
+                </div>
+                
+                <!-- 統計區域 -->
+                <div class="statistics-section">
+                    <h3>Scroll Usage Statistics</h3>
+                    <div class="stats-display">
+                        <div class="stat-item">
+                            <span class="stat-label">CS Used:</span>
+                            <span class="stat-value" id="cs-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">VL CS Used:</span>
+                            <span class="stat-value" id="vl-cs-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">WS Used:</span>
+                            <span class="stat-value" id="ws-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Scrolls:</span>
+                            <span class="stat-value" id="total-scrolls">0</span>
+                        </div>
+                    </div>
+                    <button id="reset-stats" class="reset-stats-button">Reset Statistics</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usage Log -->
+        <div class="log-section">
+            <div class="log-header">
+                <h2>Usage Log</h2>
+                <button id="toggle-log" class="toggle-log-button">Hide</button>
+            </div>
+            <div class="log-container" id="log-container">
+                <div class="log-entry">Welcome to the scroll simulator! Drag scrolls to equipment to start using.</div>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div class="modal" id="confirm-modal">
+            <div class="modal-content">
+                <h3>Confirm Scroll Usage</h3>
+                <p id="modal-message">Do you want to use Chaos Scroll?</p>
+                <div class="modal-options">
+                    <label>
+                        <input type="checkbox" id="use-white-scroll"> Also use White Scroll (WS)
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button id="confirm-yes">Confirm</button>
+                    <button id="confirm-no">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Flash -->
+        <div class="result-flash" id="result-flash">
+            <div class="result-text" id="result-text"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="equipment-config.js"></script>
+</body>
+</html>

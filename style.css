@@ -1,0 +1,822 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 5px;
+}
+
+/* 主要遊戲區域 */
+.main-game-area {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    align-items: flex-start;
+}
+
+/* 裝備區域 */
+.equipment-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.equipment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.equipment-display-area {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.equipment-slot {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+}
+
+.equipment-item {
+    background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+    border: 3px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    min-width: 300px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.equipment-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* 裝備背景顏色 - 根據weapon attack數值 */
+.equipment-item.equipment-blue {
+    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+    border-color: #2196f3;
+    box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+}
+
+.equipment-item.equipment-purple {
+    background: linear-gradient(145deg, #f3e5f5, #e1bee7);
+    border-color: #9c27b0;
+    box-shadow: 0 10px 20px rgba(156, 39, 176, 0.3);
+}
+
+.equipment-item.equipment-gold {
+    background: linear-gradient(145deg, #fff8e1, #ffecb3);
+    border-color: #ff9800;
+    box-shadow: 0 10px 20px rgba(255, 152, 0, 0.3);
+}
+
+.equipment-item.drag-over {
+    border-color: #667eea;
+    background: linear-gradient(145deg, #e8f2ff, #d1e7ff) !important;
+    transform: scale(1.05);
+    transition: all 0.1s ease;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+.equipment-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+}
+
+.equipment-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.stat {
+    background: rgba(102, 126, 234, 0.1);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9em;
+}
+
+.scroll-uses {
+    background: #ff6b6b;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+/* 卷軸區域 */
+.scrolls-section {
+    flex: 0 0 300px;
+    min-width: 300px;
+}
+
+.scrolls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.scroll-item {
+    background: linear-gradient(145deg, #fff, #f0f0f0);
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-item:active {
+    cursor: grabbing;
+}
+
+.scroll-item.dragging {
+    opacity: 0.7;
+    transform: rotate(5deg);
+}
+
+.scroll-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+}
+
+.scroll-name {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.scroll-info {
+    font-size: 0.8em;
+    color: #666;
+}
+
+/* 記錄區域 */
+.log-section {
+    margin-bottom: 20px;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.toggle-log-button {
+    background: linear-gradient(145deg, #6c757d, #5a6268);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-log-button:hover {
+    background: linear-gradient(145deg, #5a6268, #495057);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.log-container.hidden {
+    display: none;
+}
+
+.log-container {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+}
+
+.log-entry {
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.log-entry.success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.log-entry.failure {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.log-entry.info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+/* 模態框 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+
+.modal h3 {
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal p {
+    margin-bottom: 20px;
+    color: #666;
+    text-align: center;
+}
+
+.modal-options {
+    margin-bottom: 20px;
+}
+
+.modal-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-options input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+#confirm-yes {
+    background: #28a745;
+    color: white;
+}
+
+#confirm-yes:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+#confirm-no {
+    background: #6c757d;
+    color: white;
+}
+
+#confirm-no:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* 動畫 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.equipment-item.updated {
+    animation: pulse 0.6s ease;
+}
+
+/* 成功發光效果 - 黃色 */
+.equipment-item.success {
+    animation: successGlow 0.1s ease;
+    box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700, 0 0 90px #ffd700 !important;
+}
+
+/* 結果閃爍效果 */
+.result-flash {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.result-flash.show {
+    opacity: 1;
+}
+
+.result-text {
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: resultPulse 0.5s ease;
+}
+
+.result-text.success {
+    color: #4CAF50;
+}
+
+.result-text.failure {
+    color: #f44336;
+}
+
+@keyframes resultPulse {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes successGlow {
+    0% {
+        box-shadow: 0 0 5px #ffd700;
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700, 0 0 90px #ffd700;
+        transform: scale(1.05);
+    }
+    100% {
+        box-shadow: 0 0 5px #ffd700;
+        transform: scale(1);
+    }
+}
+
+/* 失敗燒毀效果 - 灰燼顏色 */
+.equipment-item.failure {
+    animation: burnEffect 2s ease;
+    filter: grayscale(100%) sepia(50%) hue-rotate(30deg) saturate(150%);
+    background: linear-gradient(145deg, #f0f0f0, #e0e0e0) !important;
+}
+
+@keyframes burnEffect {
+    0% {
+        filter: grayscale(0%) sepia(0%) hue-rotate(0deg) saturate(100%);
+        transform: scale(1);
+    }
+    25% {
+        filter: grayscale(60%) sepia(30%) hue-rotate(15deg) saturate(120%);
+        transform: scale(0.98);
+    }
+    50% {
+        filter: grayscale(90%) sepia(40%) hue-rotate(25deg) saturate(130%);
+        transform: scale(0.95);
+        box-shadow: 0 0 20px #8B4513;
+    }
+    75% {
+        filter: grayscale(100%) sepia(50%) hue-rotate(30deg) saturate(150%);
+        transform: scale(0.98);
+    }
+    100% {
+        filter: grayscale(100%) sepia(50%) hue-rotate(30deg) saturate(150%);
+        transform: scale(1);
+    }
+}
+
+/* 移除持續效果，讓裝備在動畫後恢復正常狀態 */
+
+/* 裝備選擇器樣式 */
+.equipment-selection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.equipment-selection label {
+    font-size: 1em;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+}
+
+.equipment-selection select {
+    padding: 8px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.equipment-selection select:hover {
+    border-color: #667eea;
+}
+
+.equipment-selection select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 自定義屬性輸入區域 */
+.custom-stats-section {
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom-stats-section h3 {
+    color: #495057;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    text-align: center;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 8px;
+}
+
+.stats-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-input-group label {
+    font-weight: bold;
+    color: #495057;
+    font-size: 0.9em;
+}
+
+.stat-input-group input {
+    padding: 8px 12px;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.stat-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.stat-input-group input:hover {
+    border-color: #adb5bd;
+}
+
+.apply-button {
+    background: linear-gradient(145deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.apply-button:hover {
+    background: linear-gradient(145deg, #218838, #1ea085);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.apply-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 升級設定區域 */
+.upgrade-settings {
+    background: linear-gradient(145deg, #e8f4fd, #d1e7ff);
+    border: 2px solid #b3d9ff;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.upgrade-settings h4 {
+    color: #2c5aa0;
+    margin-bottom: 10px;
+    font-size: 1em;
+    text-align: center;
+    border-bottom: 1px solid #b3d9ff;
+    padding-bottom: 5px;
+}
+
+.upgrade-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+}
+
+.upgrade-input-group label {
+    font-weight: bold;
+    color: #2c5aa0;
+    font-size: 0.9em;
+}
+
+.upgrade-input-group input {
+    padding: 8px 12px;
+    border: 2px solid #b3d9ff;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: white;
+    text-align: center;
+    width: 120px;
+}
+
+.upgrade-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.upgrade-input-group input:hover {
+    border-color: #8cc8ff;
+}
+
+/* 統計區域樣式 */
+.statistics-section {
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-section h3 {
+    color: #495057;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 8px;
+}
+
+.stats-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    font-size: 0.9em;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.stat-value {
+    color: #495057;
+    font-weight: bold;
+    background: #e3f2fd;
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 25px;
+    text-align: center;
+}
+
+.reset-stats-button {
+    background: linear-gradient(145deg, #dc3545, #c82333);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reset-stats-button:hover {
+    background: linear-gradient(145deg, #c82333, #bd2130);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.reset-stats-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+    .main-game-area {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .scrolls-section {
+        flex: none;
+        min-width: auto;
+    }
+    
+    .scrolls-container {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    .equipment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .equipment-display-area {
+        gap: 20px;
+    }
+    
+    .equipment-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .scrolls-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        padding: 20px;
+    }
+    
+    .equipment-selection {
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .equipment-selection select {
+        min-width: 150px;
+        width: 100%;
+    }
+    
+    .stats-inputs {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .custom-stats-section {
+        padding: 15px;
+        margin: 0 10px;
+    }
+    
+    .stats-display {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .statistics-section {
+        padding: 12px;
+    }
+}
