@@ -441,6 +441,27 @@ h2 {
     }
 }
 
+/* 作者資訊樣式 */
+.author-info {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-family: 'Arial', sans-serif;
+    pointer-events: none;
+    user-select: none;
+}
+
+.author-info p {
+    margin: 0;
+    padding: 0;
+}
+
 @keyframes successGlow {
     0% {
         box-shadow: 0 0 5px #ffd700;

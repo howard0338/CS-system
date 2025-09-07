@@ -1,22 +1,22 @@
-// 裝備數據結構
+// Equipment data structure
 class Equipment {
     constructor(name, stats, maxScrollUses = 10) {
         this.name = name;
         this.stats = { ...stats };
-        this.originalStats = { ...stats }; // 保存原始數值
+        this.originalStats = { ...stats }; // Save original values
         this.maxScrollUses = maxScrollUses;
         this.currentScrollUses = maxScrollUses;
-        this.zeroStats = {}; // 記錄哪些數值已經降到0
+        this.zeroStats = {}; // Record which values have dropped to 0
     }
 
-    // 更新數值（+5到-5的隨機變化，最低為0，降到0後不會再增加）
+    // Update stats (+5 to -5 random change, minimum 0, won't increase after dropping to 0)
     updateStats() {
         const statNames = Object.keys(this.stats);
         const changes = {};
-        const oldStats = { ...this.stats }; // 保存更新前的數值
+        const oldStats = { ...this.stats }; // Save values before update
         
         statNames.forEach(stat => {
-            // 如果這個數值已經降到0，則不再變化
+            // If this value has dropped to 0, no more changes
             if (this.zeroStats[stat]) {
                 changes[stat] = {
                     oldValue: oldStats[stat],
@@ -26,12 +26,12 @@ class Equipment {
                 return;
             }
             
-            // 只對原本有數值的屬性進行變化（原始數值大於0的屬性）
+            // Only change attributes that originally had values (original value > 0)
             if (this.originalStats[stat] > 0) {
-                const change = Math.floor(Math.random() * 11) - 5; // -5 到 +5
+                const change = Math.floor(Math.random() * 11) - 5; // -5 to +5
                 const newValue = Math.max(0, this.stats[stat] + change);
                 
-                // 如果新值為0，標記這個數值已經降到0
+                // If new value is 0, mark this value as dropped to 0
                 if (newValue === 0) {
                     this.zeroStats[stat] = true;
                 }
@@ -43,7 +43,7 @@ class Equipment {
                 };
                 this.stats[stat] = newValue;
             } else {
-                // 如果原始數值為0，則不變化
+                // If original value is 0, no change
                 changes[stat] = {
                     oldValue: oldStats[stat],
                     newValue: oldStats[stat],
@@ -55,14 +55,14 @@ class Equipment {
         return changes;
     }
 
-    // 更新數值（VL CS專用：+2到-2的隨機變化，最低為0，降到0後不會再增加）
+    // Update stats (VL CS specific: +2 to -2 random change, minimum 0, won't increase after dropping to 0)
     updateStatsVL() {
         const statNames = Object.keys(this.stats);
         const changes = {};
-        const oldStats = { ...this.stats }; // 保存更新前的數值
+        const oldStats = { ...this.stats }; // Save values before update
         
         statNames.forEach(stat => {
-            // 如果這個數值已經降到0，則不再變化
+            // If this value has dropped to 0, no more changes
             if (this.zeroStats[stat]) {
                 changes[stat] = {
                     oldValue: oldStats[stat],
@@ -72,12 +72,12 @@ class Equipment {
                 return;
             }
             
-            // 只對原本有數值的屬性進行變化（原始數值大於0的屬性）
+            // Only change attributes that originally had values (original value > 0)
             if (this.originalStats[stat] > 0) {
-                const change = Math.floor(Math.random() * 5) - 2; // -2 到 +2
+                const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
                 const newValue = Math.max(0, this.stats[stat] + change);
                 
-                // 如果新值為0，標記這個數值已經降到0
+                // If new value is 0, mark this value as dropped to 0
                 if (newValue === 0) {
                     this.zeroStats[stat] = true;
                 }
@@ -89,7 +89,7 @@ class Equipment {
                 };
                 this.stats[stat] = newValue;
             } else {
-                // 如果原始數值為0，則不變化
+                // If original value is 0, no change
                 changes[stat] = {
                     oldValue: oldStats[stat],
                     newValue: oldStats[stat],
@@ -101,7 +101,7 @@ class Equipment {
         return changes;
     }
 
-    // 減少卷軸使用次數
+    // Reduce scroll uses
     useScroll() {
         if (this.currentScrollUses > 0) {
             this.currentScrollUses--;
@@ -110,13 +110,13 @@ class Equipment {
         return false;
     }
 
-    // 檢查是否還有卷軸使用次數
+    // Check if scroll uses are available
     canUseScroll() {
         return this.currentScrollUses > 0;
     }
 }
 
-// 卷軸類別
+// Scroll class
 class Scroll {
     constructor(name, successRate, type) {
         this.name = name;
@@ -124,9 +124,9 @@ class Scroll {
         this.type = type;
     }
 
-    // 嘗試使用卷軸
+    // Attempt to use scroll
     attemptUse() {
-        // 如果是100%成功率的卷軸，直接返回true
+        // If it's a 100% success rate scroll, return true directly
         if (this.successRate >= 1.0) {
             return true;
         }
@@ -134,10 +134,10 @@ class Scroll {
     }
 }
 
-// 遊戲管理器
+// Game Manager
 class GameManager {
     constructor() {
-        // 獲取自定義初始值，如果沒有則使用默認值
+        // Get custom initial values, use default if none
         this.customStats = this.getCustomStats();
         this.equipment = new Equipment('Blackfist Cloak', this.customStats, 5);
         
@@ -155,11 +155,11 @@ class GameManager {
         this.updateDisplay();
     }
 
-    // 獲取自定義屬性值
+    // Get custom stat values
     getCustomStats() {
         const stats = {};
         
-        // 獲取所有可能的屬性輸入值
+        // Get all possible stat input values
         const statInputs = [
             'custom-hp', 'custom-weapon-attack', 'custom-weapon-defence', 
             'custom-magic-defence', 'custom-str', 'custom-dex', 'custom-int', 'custom-luk', 'custom-speed'
@@ -169,7 +169,7 @@ class GameManager {
             const input = document.getElementById(inputId);
             if (input && input.value !== '' && parseInt(input.value) >= 0) {
                 let statName = inputId.replace('custom-', '');
-                // 處理特殊的屬性名稱映射
+                // Handle special attribute name mapping
                 if (statName === 'weapon-attack') statName = 'weaponAttack';
                 if (statName === 'weapon-defence') statName = 'weaponDefence';
                 if (statName === 'magic-defence') statName = 'magicDefence';
@@ -180,11 +180,11 @@ class GameManager {
         return stats;
     }
 
-    // 更新自定義屬性輸入框的值
+    // Update custom stat input values
     updateCustomStatsInputs(equipmentName) {
         const defaultStats = this.getDefaultStatsForEquipment(equipmentName);
         
-        // 首先清空所有輸入框
+        // First clear all input fields
         const allStatInputs = [
             'custom-hp', 'custom-weapon-attack', 'custom-weapon-defence', 
             'custom-magic-defence', 'custom-str', 'custom-dex', 'custom-int', 'custom-luk', 'custom-speed'
@@ -193,13 +193,13 @@ class GameManager {
         allStatInputs.forEach(inputId => {
             const input = document.getElementById(inputId);
             if (input) {
-                input.value = 0; // 先設為0
+                input.value = 0; // Set to 0 first
             }
         });
         
-        // 然後設置該裝備的默認值
+        // Then set the default values for this equipment
         Object.keys(defaultStats).forEach(statKey => {
-            // 處理特殊的屬性名稱映射
+            // Handle special attribute name mapping
             let inputId = statKey;
             if (statKey === 'weaponAttack') inputId = 'weapon-attack';
             if (statKey === 'weaponDefence') inputId = 'weapon-defence';
@@ -211,7 +211,7 @@ class GameManager {
             }
         });
         
-        // 更新升級次數
+        // Update upgrade count
         const defaultScrollUses = this.getDefaultScrollUsesForEquipment(equipmentName);
         const scrollUsesInput = document.getElementById('custom-scroll-uses');
         if (scrollUsesInput) {
@@ -219,7 +219,7 @@ class GameManager {
         }
     }
 
-    // 獲取裝備的默認屬性
+    // Get equipment default stats
     getDefaultStatsForEquipment(equipmentName) {
         switch(equipmentName) {
             case 'blackfist-cloak':
@@ -236,12 +236,14 @@ class GameManager {
                 return { weaponAttack: 5, weaponDefence: 5, magicDefence: 5 };
             case 'von-leon-belt':
                 return { str: 2, dex: 2, int: 2, luk: 2, weaponAttack: 2, weaponDefence: 150, magicDefence: 30 };
+            case 'red-christmas-sock':
+                return { weaponAttack: 1, weaponDefence: 14, magicDefence: 6 };
             default:
                 return { hp: 120, weaponAttack: 10, weaponDefence: 43, magicDefence: 48 };
         }
     }
 
-    // 獲取裝備的默認升級次數
+    // Get equipment default upgrade count
     getDefaultScrollUsesForEquipment(equipmentName) {
         switch(equipmentName) {
             case 'blackfist-cloak':
@@ -258,24 +260,26 @@ class GameManager {
                 return 5;
             case 'von-leon-belt':
                 return 4;
+            case 'red-christmas-sock':
+                return 7;
             default:
                 return 5;
         }
     }
 
-    // 獲取自定義升級次數
+    // Get custom upgrade count
     getCustomScrollUses() {
         const input = document.getElementById('custom-scroll-uses');
         if (input && input.value) {
             const value = parseInt(input.value);
-            return Math.max(0, Math.min(50, value)); // 限制在0-50之間
+            return Math.max(0, Math.min(50, value)); // Limit between 0-50
         }
-        return 5; // 默認值
+        return 5; // Default value
     }
 
-    // 初始化事件監聽器
+    // Initialize event listeners
     initializeEventListeners() {
-        // 卷軸拖拽事件
+        // Scroll drag events
         const scrollItems = document.querySelectorAll('.scroll-item');
         scrollItems.forEach(item => {
             item.addEventListener('dragstart', (e) => {
@@ -289,12 +293,12 @@ class GameManager {
             });
         });
 
-        // 裝備拖拽事件 - 只支持拖拽使用
+        // Equipment drag events - only support drag usage
         this.setupDragEvents();
 
-        // 移除點擊功能，只保留拖拽功能
+        // Remove click functionality, only keep drag functionality
 
-        // 模態框事件
+        // Modal events
         document.getElementById('confirm-yes').addEventListener('click', () => {
             this.useScroll();
             this.hideModal();
@@ -304,92 +308,92 @@ class GameManager {
             this.hideModal();
         });
 
-        // 點擊模態框背景關閉
+        // Click modal background to close
         document.getElementById('confirm-modal').addEventListener('click', (e) => {
             if (e.target.id === 'confirm-modal') {
                 this.hideModal();
             }
         });
 
-        // 自定義屬性應用按鈕
+        // Custom stats apply button
         document.getElementById('apply-custom-stats').addEventListener('click', () => {
             this.applyCustomStats();
         });
 
-        // 重置統計按鈕
+        // Reset statistics button
         document.getElementById('reset-stats').addEventListener('click', () => {
             this.resetStatistics();
         });
     }
 
-    // 顯示確認模態框
+    // Show confirmation modal
     showConfirmModal() {
         const modal = document.getElementById('confirm-modal');
         const message = document.getElementById('modal-message');
         const useWhiteScroll = document.getElementById('use-white-scroll');
         
-        // 根據當前拖拽的卷軸顯示不同的訊息
+        // Show different messages based on current dragged scroll
         if (this.currentDragScroll === 'vl-chaos-scroll') {
-            message.textContent = '是否要使用VL混沌卷軸？';
+            message.textContent = 'Use VL Chaos Scroll?';
         } else {
-            message.textContent = '是否要使用混沌卷軸？';
+            message.textContent = 'Use Chaos Scroll?';
         }
         
         useWhiteScroll.checked = false;
         modal.style.display = 'block';
     }
 
-    // 隱藏模態框
+    // Hide modal
     hideModal() {
         document.getElementById('confirm-modal').style.display = 'none';
     }
 
-    // 設置拖拽事件
+    // Setup drag events
     setupDragEvents() {
         const equipmentSlot = document.getElementById('equipment-slot');
         const equipmentItem = document.getElementById('blackfist-cloak');
         
-        console.log('設置拖拽事件，裝備槽:', equipmentSlot, '裝備:', equipmentItem);
+        console.log('Setup drag events, equipment slot:', equipmentSlot, 'equipment:', equipmentItem);
         
-        // 為裝備槽和裝備本身都添加拖拽事件
+        // Add drag events for both equipment slot and equipment itself
         [equipmentSlot, equipmentItem].forEach(element => {
             if (element) {
                 element.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     equipmentSlot.classList.add('drag-over');
-                    console.log('拖拽經過裝備區域');
+                    console.log('Drag over equipment area');
                 });
 
                 element.addEventListener('dragleave', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     equipmentSlot.classList.remove('drag-over');
-                    console.log('拖拽離開裝備區域');
+                    console.log('Drag leave equipment area');
                 });
 
                 element.addEventListener('drop', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     equipmentSlot.classList.remove('drag-over');
-                    console.log('拖拽放下，當前卷軸:', this.currentDragScroll);
+                    console.log('Drag drop, current scroll:', this.currentDragScroll);
                     
-                    // 處理混沌卷軸和VL混沌卷軸的拖拽
+                    // Handle chaos scroll and VL chaos scroll drag
                     if (this.currentDragScroll === 'chaos-scroll') {
-                        console.log('顯示確認對話框');
+                        console.log('Show confirmation dialog');
                         this.showConfirmModal();
                     } else if (this.currentDragScroll === 'vl-chaos-scroll') {
-                        console.log('VL混沌卷軸 - 由setupDragEvents處理');
-                        // VL CS 由 setupDirectDragEvents 處理，這裡不處理
+                        console.log('VL Chaos Scroll - handled by setupDragEvents');
+                        // VL CS handled by setupDirectDragEvents, not here
                     } else {
-                        console.log('不是混沌卷軸，忽略');
+                        console.log('Not a chaos scroll, ignore');
                     }
                 });
             }
         });
     }
 
-    // 直接使用卷軸（VL CS專用，不詢問白捲）
+    // Direct scroll use (VL CS specific, no white scroll prompt)
     useScrollDirect() {
         if (!this.equipment.canUseScroll()) {
             this.addLog('Equipment cannot use more scrolls!', 'failure');
@@ -399,50 +403,50 @@ class GameManager {
         const isVlChaosScroll = this.currentDragScroll === 'vl-chaos-scroll';
         
         if (isVlChaosScroll) {
-            // VL CS 100%成功，直接使用
+            // VL CS 100% success, direct use
             const changes = this.equipment.updateStatsVL();
             const oldScrollUses = this.equipment.currentScrollUses;
             this.equipment.useScroll();
             const newScrollUses = this.equipment.currentScrollUses;
             
-            // 記錄統計數據
+            // Record statistics
             this.statistics.vlCsUsed++;
             
             this.addLog('VL Chaos Scroll used successfully! Equipment stats changed:', 'success');
             this.logStatChanges(changes);
             
-            // 只有升級次數減少1時才顯示成功
+            // Only show success when upgrade count decreases by 1
             if (oldScrollUses - newScrollUses === 1) {
                 this.showSuccessEffect();
             } else {
                 this.showFailureEffect(false);
             }
         } else {
-            // 普通CS，使用原有邏輯
+            // Regular CS, use original logic
             const scrollToUse = this.chaosScroll;
             const isSuccess = scrollToUse.attemptUse();
             
             if (isSuccess) {
-                // 成功使用卷軸
+                // Successfully used scroll
                 const changes = this.equipment.updateStats();
                 const oldScrollUses = this.equipment.currentScrollUses;
                 this.equipment.useScroll();
                 const newScrollUses = this.equipment.currentScrollUses;
                 
-                // 記錄統計數據
+                // Record statistics
                 this.statistics.csUsed++;
                 
                 this.addLog('Chaos Scroll used successfully! Equipment stats changed:', 'success');
                 this.logStatChanges(changes);
                 
-                // 只有升級次數減少1時才顯示成功
+                // Only show success when upgrade count decreases by 1
                 if (oldScrollUses - newScrollUses === 1) {
                     this.showSuccessEffect();
                 } else {
                     this.showFailureEffect(false);
                 }
             } else {
-                // 失敗
+                // Failed
                 this.statistics.csUsed++;
                 
                 const oldScrollUses = this.equipment.currentScrollUses;
@@ -451,7 +455,7 @@ class GameManager {
                 
                 this.addLog('Chaos Scroll failed, upgrade count -1', 'failure');
                 
-                // 只有升級次數減少1時才顯示成功，否則顯示失敗
+                // Only show success when upgrade count decreases by 1, otherwise show failure
                 if (oldScrollUses - newScrollUses === 1) {
                     this.showSuccessEffect();
                 } else {
@@ -464,7 +468,7 @@ class GameManager {
         this.updateStatistics();
     }
 
-    // 使用卷軸
+    // Use scroll
     useScroll() {
         if (!this.equipment.canUseScroll()) {
             this.addLog('Equipment cannot use more scrolls!', 'failure');
@@ -474,18 +478,18 @@ class GameManager {
         const useWhiteScroll = document.getElementById('use-white-scroll').checked;
         const isVlChaosScroll = this.currentDragScroll === 'vl-chaos-scroll';
         
-        // 選擇要使用的卷軸
+        // Choose which scroll to use
         const scrollToUse = isVlChaosScroll ? this.vlChaosScroll : this.chaosScroll;
         const isSuccess = scrollToUse.attemptUse();
         
         if (isSuccess) {
-            // 成功使用卷軸
+            // Successfully used scroll
             const changes = isVlChaosScroll ? this.equipment.updateStatsVL() : this.equipment.updateStats();
             const oldScrollUses = this.equipment.currentScrollUses;
             this.equipment.useScroll();
             const newScrollUses = this.equipment.currentScrollUses;
             
-            // 記錄統計數據
+            // Record statistics
             if (isVlChaosScroll) {
                 this.statistics.vlCsUsed++;
             } else {
@@ -499,7 +503,7 @@ class GameManager {
             this.addLog(`${scrollName} used successfully! Equipment stats changed:`, 'success');
             this.logStatChanges(changes);
             
-            // 只有升級次數減少1時才顯示成功
+            // Only show success when upgrade count decreases by 1
             if (oldScrollUses - newScrollUses === 1) {
                 this.showSuccessEffect();
             } else {
@@ -510,8 +514,8 @@ class GameManager {
                 this.addLog('White Scroll protected the upgrade count!', 'info');
             }
         } else {
-            // 失敗（只有普通CS會失敗，VL CS成功率100%）
-            // 記錄統計數據（失敗也要記錄CS使用）
+            // Failed (only regular CS can fail, VL CS has 100% success rate)
+            // Record statistics (also record CS use on failure)
             this.statistics.csUsed++;
             if (useWhiteScroll) {
                 this.statistics.wsUsed++;
@@ -519,7 +523,7 @@ class GameManager {
             
             if (useWhiteScroll) {
                 this.addLog('Chaos Scroll failed, but White Scroll protected the upgrade count!', 'info');
-                // 失敗但有保護，只顯示短暫的失敗效果
+                // Failed but protected, only show brief failure effect
                 this.showFailureEffect(false);
             } else {
                 const oldScrollUses = this.equipment.currentScrollUses;
@@ -528,7 +532,7 @@ class GameManager {
                 
                 this.addLog('Chaos Scroll failed, upgrade count -1', 'failure');
                 
-                // 只有升級次數減少1時才顯示成功，否則顯示失敗
+                // Only show success when upgrade count decreases by 1, otherwise show failure
                 if (oldScrollUses - newScrollUses === 1) {
                     this.showSuccessEffect();
                 } else {
@@ -541,7 +545,7 @@ class GameManager {
         this.updateStatistics();
     }
 
-    // 更新統計顯示
+    // Update statistics display
     updateStatistics() {
         document.getElementById('cs-count').textContent = this.statistics.csUsed;
         document.getElementById('vl-cs-count').textContent = this.statistics.vlCsUsed;
@@ -549,7 +553,7 @@ class GameManager {
         document.getElementById('total-scrolls').textContent = this.statistics.csUsed + this.statistics.vlCsUsed + this.statistics.wsUsed;
     }
 
-    // 重置統計
+    // Reset statistics
     resetStatistics() {
         this.statistics = {
             csUsed: 0,
@@ -560,7 +564,7 @@ class GameManager {
         this.addLog('Statistics reset to zero', 'info');
     }
 
-    // 記錄數值變化
+    // Log stat changes
     logStatChanges(changes) {
         const statNames = {
             hp: 'HP',
@@ -578,10 +582,10 @@ class GameManager {
             const changeData = changes[stat];
             
             if (changeData.change === 0 && this.equipment.zeroStats[stat]) {
-                // 如果數值已經降到0，顯示特殊信息
+                // If value has dropped to 0, show special message
                 this.addLog(`  ${statNames[stat]}: ${changeData.oldValue} (reached 0, cannot increase)`, 'info');
             } else if (changeData.newValue === 0) {
-                // 如果數值降到0，顯示隱藏信息
+                // If value drops to 0, show hidden message
                 this.addLog(`  ${statNames[stat]}: ${changeData.oldValue} → 0 (hidden)`, 'info');
             } else {
                 const changeText = changeData.change > 0 ? `+${changeData.change}` : changeData.change.toString();
@@ -590,7 +594,7 @@ class GameManager {
         });
     }
 
-    // 顯示結果閃爍
+    // Show result flash
     showResultFlash(text, type) {
         const resultFlash = document.getElementById('result-flash');
         const resultText = document.getElementById('result-text');
@@ -605,7 +609,7 @@ class GameManager {
         }, 500);
     }
 
-    // 添加日誌
+    // Add log
     addLog(message, type = 'info') {
         const logContainer = document.getElementById('log-container');
         const logEntry = document.createElement('div');
@@ -614,54 +618,54 @@ class GameManager {
         
         logContainer.insertBefore(logEntry, logContainer.firstChild);
         
-        // 限制日誌數量
+        // Limit log count
         const logs = logContainer.querySelectorAll('.log-entry');
         if (logs.length > 50) {
             logContainer.removeChild(logs[logs.length - 1]);
         }
     }
 
-    // 顯示成功效果
+    // Show success effect
     showSuccessEffect() {
         const equipmentItem = document.getElementById('blackfist-cloak');
         
-        // 移除之前的狀態類
+        // Remove previous state classes
         equipmentItem.classList.remove('failure', 'burned', 'enhanced');
         
-        // 添加成功效果
+        // Add success effect
         equipmentItem.classList.add('success');
         
-        // 動畫結束後完全恢復正常狀態
+        // Completely restore normal state after animation
         setTimeout(() => {
             equipmentItem.classList.remove('success');
-            // 不再添加持續效果，讓裝備恢復正常狀態
+            // No longer add persistent effects, let equipment return to normal state
         }, 100);
         
-        // 顯示成功閃爍
+        // Show success flash
         this.showResultFlash('SUCCESS', 'success');
     }
 
-    // 顯示失敗效果
+    // Show failure effect
     showFailureEffect(isBurned = false) {
         const equipmentItem = document.getElementById('blackfist-cloak');
         
-        // 移除之前的狀態類
+        // Remove previous state classes
         equipmentItem.classList.remove('success', 'enhanced', 'burned');
         
         if (isBurned) {
-            // 燒毀效果
+            // Burned effect
             equipmentItem.classList.add('failure');
             
-            // 動畫結束後恢復正常狀態
+            // Restore normal state after animation
             setTimeout(() => {
                 equipmentItem.classList.remove('failure');
-                // 不再添加持續燒毀狀態，讓裝備恢復正常
+                // No longer add persistent burned state, let equipment return to normal
             }, 2000);
             
-            // 顯示失敗閃爍
+            // Show failure flash
             this.showResultFlash('FAIL', 'failure');
         } else {
-            // 短暫失敗效果（有保護時）
+            // Brief failure effect (when protected)
             equipmentItem.classList.add('failure');
             
             setTimeout(() => {
@@ -670,21 +674,21 @@ class GameManager {
         }
     }
 
-    // 更新顯示
+    // Update display
     updateDisplay() {
-        // 動態生成裝備屬性顯示
+        // Dynamically generate equipment stat display
         this.generateStatsDisplay();
         
-        // 更新卷軸使用次數
+        // Update scroll use count
         document.getElementById('scroll-uses').textContent = this.equipment.currentScrollUses;
         
-        // 更新裝備背景顏色
+        // Update equipment background color
         this.updateEquipmentBackground();
         
-        // 更新統計顯示
+        // Update statistics display
         this.updateStatistics();
         
-        // 添加更新動畫
+        // Add update animation
         const equipmentItem = document.getElementById('blackfist-cloak');
         equipmentItem.classList.add('updated');
         setTimeout(() => {
@@ -692,7 +696,7 @@ class GameManager {
         }, 600);
     }
 
-    // 更新裝備背景顏色
+    // Update equipment background color
     updateEquipmentBackground() {
         const equipmentItem = document.getElementById('blackfist-cloak');
         if (!equipmentItem) return;
@@ -700,12 +704,12 @@ class GameManager {
         const weaponAttack = this.equipment.stats.weaponAttack || 0;
         const equipmentName = this.equipment.name;
         
-        // 移除所有背景顏色類
+        // Remove all background color classes
         equipmentItem.classList.remove('equipment-blue', 'equipment-purple', 'equipment-gold');
         
-        // 根據裝備類型和weapon attack數值添加對應的背景顏色
+        // Add corresponding background color based on equipment type and weapon attack value
         if (equipmentName === 'Blackfist Cloak') {
-            // Blackfist Cloak 的顏色規則
+            // Blackfist Cloak color rules
             if (weaponAttack >= 22) {
                 equipmentItem.classList.add('equipment-gold');
             } else if (weaponAttack >= 15) {
@@ -714,7 +718,7 @@ class GameManager {
                 equipmentItem.classList.add('equipment-blue');
             }
         } else if (equipmentName === 'VL Shoes') {
-            // VL Shoes 的顏色規則
+            // VL Shoes color rules
             if (weaponAttack >= 20) {
                 equipmentItem.classList.add('equipment-gold');
             } else if (weaponAttack >= 13) {
@@ -723,7 +727,7 @@ class GameManager {
                 equipmentItem.classList.add('equipment-blue');
             }
         } else if (equipmentName === 'Stormcaster Gloves') {
-            // Stormcaster Gloves 的顏色規則
+            // Stormcaster Gloves color rules
             if (weaponAttack >= 23) {
                 equipmentItem.classList.add('equipment-gold');
             } else if (weaponAttack >= 16) {
@@ -732,7 +736,7 @@ class GameManager {
                 equipmentItem.classList.add('equipment-blue');
             }
         } else if (equipmentName === 'Von Leon\'s Belt') {
-            // Von Leon's Belt 的顏色規則
+            // Von Leon's Belt color rules
             if (weaponAttack >= 8) {
                 equipmentItem.classList.add('equipment-gold');
             } else if (weaponAttack >= 5) {
@@ -740,18 +744,51 @@ class GameManager {
             } else if (weaponAttack >= 3) {
                 equipmentItem.classList.add('equipment-blue');
             }
+        } else if (equipmentName === 'Red Christmas Sock') {
+            // Red Christmas Sock color rules
+            if (weaponAttack >= 19) {
+                equipmentItem.classList.add('equipment-gold');
+            } else if (weaponAttack >= 12) {
+                equipmentItem.classList.add('equipment-purple');
+            } else if (weaponAttack >= 5) {
+                equipmentItem.classList.add('equipment-blue');
+            }
+        } else if (equipmentName === 'BWG') {
+            // BWG color rules
+            if (weaponAttack >= 18) {
+                equipmentItem.classList.add('equipment-gold');
+            } else if (weaponAttack >= 11) {
+                equipmentItem.classList.add('equipment-purple');
+            } else if (weaponAttack >= 3) {
+                equipmentItem.classList.add('equipment-blue');
+            }
+        } else if (equipmentName === 'Spectrum Goggles') {
+            // Spectrum Goggles color rules: based on sum of four attributes
+            const str = this.equipment.stats.str || 0;
+            const dex = this.equipment.stats.dex || 0;
+            const int = this.equipment.stats.int || 0;
+            const luk = this.equipment.stats.luk || 0;
+            const totalStats = str + dex + int + luk;
+            
+            if (totalStats >= 36) {
+                equipmentItem.classList.add('equipment-gold');
+            } else if (totalStats >= 22) {
+                equipmentItem.classList.add('equipment-purple');
+            } else if (totalStats >= 6) {
+                equipmentItem.classList.add('equipment-blue');
+            }
         }
     }
 
-    // 生成屬性顯示
+    // Generate stat display
     generateStatsDisplay() {
         const statsContainer = document.getElementById('equipment-stats');
         const stats = this.equipment.stats;
         
-        // 清空現有內容
+        // Clear existing content
         statsContainer.innerHTML = '';
         
-        // 屬性名稱映射
+        // Stat name mapping
         const statNames = {
             hp: 'HP',
             weaponAttack: 'Weapon Attack',
@@ -764,7 +801,7 @@ class GameManager {
             speed: 'Speed'
         };
         
-        // 根據裝備屬性動態生成顯示，只顯示非0的屬性
+        // Dynamically generate display based on equipment stats, only show non-zero stats
         Object.keys(stats).forEach(statKey => {
             if (stats[statKey] !== undefined && stats[statKey] > 0) {
                 const statDiv = document.createElement('div');
@@ -775,27 +812,27 @@ class GameManager {
         });
     }
 
-    // 更新單個數值顯示
+    // Update single stat display
     updateStatDisplay(statId, value) {
         const element = document.getElementById(statId);
         if (!element) return;
         
         element.textContent = value;
         
-        // 如果數值為0，隱藏該屬性
+        // If value is 0, hide the stat
         if (value === 0) {
             const statDiv = element.parentElement;
             if (statDiv && statDiv.classList.contains('stat')) {
                 statDiv.style.display = 'none';
             }
         } else {
-            // 如果數值不為0，顯示該屬性
+            // If value is not 0, show the stat
             const statDiv = element.parentElement;
             if (statDiv && statDiv.classList.contains('stat')) {
                 statDiv.style.display = '';
             }
             
-            // 如果數值已經降到0，添加特殊樣式
+            // If value has dropped to 0, add special style
             if (this.equipment.zeroStats[statId]) {
                 element.style.color = '#999';
                 element.style.textDecoration = 'line-through';
@@ -808,26 +845,26 @@ class GameManager {
         }
     }
 
-    // 應用自定義屬性
+    // Apply custom stats
     applyCustomStats() {
         const newStats = this.getCustomStats();
         const newScrollUses = this.getCustomScrollUses();
         
-        // 驗證輸入值
+        // Validate input values
         if (!this.validateCustomStats(newStats)) {
             return;
         }
         
-        // 創建新裝備實例
+        // Create new equipment instance
         this.equipment = new Equipment('Blackfist Cloak', newStats, newScrollUses);
         this.updateDisplay();
         this.addLog(`Custom stats applied successfully! Upgrades available: ${newScrollUses}`, 'success');
         
-        // 顯示成功效果
+        // Show success effect
         this.showSuccessEffect();
     }
 
-    // 驗證自定義屬性
+    // Validate custom stats
     validateCustomStats(stats) {
         const statNames = {
             hp: 'HP',
@@ -851,24 +888,24 @@ class GameManager {
         return true;
     }
 
-    // 重置裝備（用於測試）
+    // Reset equipment (for testing)
     resetEquipment() {
-        // 獲取當前選中的裝備
+        // Get currently selected equipment
         const equipmentSelect = document.getElementById('equipment-select');
         const currentEquipment = equipmentSelect ? equipmentSelect.value : 'blackfist-cloak';
         
-        // 重置為自定義屬性或默認值
+        // Reset to custom stats or default values
         const resetStats = this.getCustomStats();
         const resetScrollUses = this.getCustomScrollUses();
         
-        // 根據當前裝備創建新的裝備實例
+        // Create new equipment instance based on current equipment
         const equipmentName = this.getEquipmentDisplayName(currentEquipment);
         this.equipment = new Equipment(equipmentName, resetStats, resetScrollUses);
         this.updateDisplay();
         this.addLog(`${equipmentName} reset to initial state, all stats restored. Upgrades available: ${resetScrollUses}`, 'info');
     }
 
-    // 獲取裝備顯示名稱
+    // Get equipment display name
     getEquipmentDisplayName(equipmentValue) {
         const nameMap = {
             'blackfist-cloak': 'Blackfist Cloak',
@@ -877,28 +914,29 @@ class GameManager {
             'roa': 'ROA',
             'spectrum-goggles': 'Spectrum Goggles',
             'stormcaster-gloves': 'Stormcaster Gloves',
-            'von-leon-belt': 'Von Leon\'s Belt'
+            'von-leon-belt': 'Von Leon\'s Belt',
+            'red-christmas-sock': 'Red Christmas Sock'
         };
         return nameMap[equipmentValue] || 'Blackfist Cloak';
     }
 
-    // 添加新裝備（擴充功能）
+    // Add new equipment (expansion feature)
     addEquipment(name, stats, maxScrollUses = 10) {
-        // 這裡可以實現添加新裝備的邏輯
+        // Here you can implement the logic for adding new equipment
         this.addLog(`New equipment ${name} added!`, 'info');
     }
 }
 
-// 當頁面載入完成時初始化遊戲
+// Initialize game when page loads
 document.addEventListener('DOMContentLoaded', () => {
     window.gameManager = new GameManager();
     
-    // 直接設置拖拽事件（確保在頁面載入後立即設置）
+    // Direct setup drag events (ensure setup immediately after page load)
     setTimeout(() => {
         setupDirectDragEvents();
     }, 200);
     
-    // 添加鍵盤快捷鍵
+    // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         if (e.key === 'r' && e.ctrlKey) {
             e.preventDefault();
@@ -906,7 +944,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // 添加重置按鈕
+    // Add reset button
     const resetButton = document.createElement('button');
     resetButton.textContent = 'Reset Equipment (Ctrl+R)';
     resetButton.style.cssText = `
@@ -941,28 +979,28 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(resetButton);
 });
 
-// 直接設置拖拽事件函數
+// Direct setup drag events function
 function setupDirectDragEvents() {
-    console.log('開始設置直接拖拽事件');
+    console.log('Start setting up direct drag events');
     
     const equipmentSlot = document.getElementById('equipment-slot');
     const equipmentItem = document.getElementById('blackfist-cloak');
     const chaosScroll = document.getElementById('chaos-scroll');
     
-    console.log('元素檢查:', {
+    console.log('Element check:', {
         equipmentSlot: equipmentSlot,
         equipmentItem: equipmentItem,
         chaosScroll: chaosScroll
     });
     
     if (!equipmentSlot || !equipmentItem || !chaosScroll) {
-        console.error('找不到必要的元素');
+        console.error('Cannot find necessary elements');
         return;
     }
     
-    // 設置卷軸拖拽開始事件
+    // Setup scroll drag start event
     chaosScroll.addEventListener('dragstart', (e) => {
-        console.log('開始拖拽混沌卷軸');
+        console.log('Start dragging chaos scroll');
         window.currentDragScroll = 'chaos-scroll';
         if (window.gameManager) {
             window.gameManager.currentDragScroll = 'chaos-scroll';
@@ -971,7 +1009,7 @@ function setupDirectDragEvents() {
     });
     
     chaosScroll.addEventListener('dragend', (e) => {
-        console.log('結束拖拽混沌卷軸');
+        console.log('End dragging chaos scroll');
         e.target.classList.remove('dragging');
         window.currentDragScroll = null;
         if (window.gameManager) {
@@ -979,11 +1017,11 @@ function setupDirectDragEvents() {
         }
     });
     
-    // 設置VL混沌卷軸拖拽事件
+    // Setup VL chaos scroll drag event
     const vlChaosScroll = document.getElementById('vl-chaos-scroll');
     if (vlChaosScroll) {
         vlChaosScroll.addEventListener('dragstart', (e) => {
-            console.log('開始拖拽VL混沌卷軸');
+            console.log('Start dragging VL chaos scroll');
             window.currentDragScroll = 'vl-chaos-scroll';
             if (window.gameManager) {
                 window.gameManager.currentDragScroll = 'vl-chaos-scroll';
@@ -992,7 +1030,7 @@ function setupDirectDragEvents() {
         });
         
         vlChaosScroll.addEventListener('dragend', (e) => {
-            console.log('結束拖拽VL混沌卷軸');
+            console.log('End dragging VL chaos scroll');
             e.target.classList.remove('dragging');
             window.currentDragScroll = null;
             if (window.gameManager) {
@@ -1001,45 +1039,45 @@ function setupDirectDragEvents() {
         });
     }
     
-    // 設置裝備拖拽事件
+    // Setup equipment drag event
     [equipmentSlot, equipmentItem].forEach(element => {
         element.addEventListener('dragover', (e) => {
             e.preventDefault();
             e.stopPropagation();
             equipmentSlot.classList.add('drag-over');
-            console.log('拖拽經過裝備區域');
+            console.log('Drag over equipment area');
         });
         
         element.addEventListener('dragleave', (e) => {
             e.preventDefault();
             e.stopPropagation();
             equipmentSlot.classList.remove('drag-over');
-            console.log('拖拽離開裝備區域');
+            console.log('Drag leave equipment area');
         });
         
         element.addEventListener('drop', (e) => {
             e.preventDefault();
             e.stopPropagation();
             equipmentSlot.classList.remove('drag-over');
-            console.log('拖拽放下，當前卷軸:', window.currentDragScroll);
+            console.log('Drag drop, current scroll:', window.currentDragScroll);
             
             if (window.currentDragScroll === 'chaos-scroll') {
-                console.log('顯示確認對話框');
+                console.log('Show confirmation dialog');
                 if (window.gameManager && window.gameManager.showConfirmModal) {
                     window.gameManager.showConfirmModal();
                 } else {
-                    console.error('gameManager 或 showConfirmModal 不存在');
+                    console.error('gameManager or showConfirmModal does not exist');
                 }
             } else if (window.currentDragScroll === 'vl-chaos-scroll') {
-                console.log('直接使用VL混沌卷軸');
+                console.log('Direct use VL Chaos Scroll');
                 if (window.gameManager && window.gameManager.useScrollDirect) {
                     window.gameManager.useScrollDirect();
                 } else {
-                    console.error('gameManager 或 useScrollDirect 不存在');
+                    console.error('gameManager or useScrollDirect does not exist');
                 }
             }
         });
     });
     
-    console.log('直接拖拽事件設置完成');
+    console.log('Direct drag events setup complete');
 }

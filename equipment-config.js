@@ -119,7 +119,7 @@ class ExtendedGameManager extends GameManager {
     constructor() {
         super();
         this.equipmentConfig = new EquipmentConfig();
-        this.availableEquipment = ['blackfist-cloak', 'vl-shoes', 'bwg', 'roa', 'spectrum-goggless', 'stormcaster-gloves', 'von-leon-belt']; // 當前可用的裝備
+        this.availableEquipment = ['blackfist-cloak', 'vl-shoes', 'bwg', 'roa', 'spectrum-goggless', 'stormcaster-gloves', 'von-leon-belt', 'red-christmas-sock']; // 當前可用的裝備
         this.currentEquipmentIndex = 0;
         this.initializeEquipmentSwitcher();
         
@@ -210,6 +210,15 @@ class ExtendedGameManager extends GameManager {
             };
             const customScrollUses = this.getCustomScrollUses();
             this.equipment = new Equipment('Von Leon\'s Belt', equipmentStats, customScrollUses);
+        } else if (equipmentName === 'red-christmas-sock') {
+            const customStats = this.getCustomStats();
+            equipmentStats = Object.keys(customStats).length > 0 ? customStats : {
+                weaponAttack: 1,
+                weaponDefence: 14,
+                magicDefence: 6
+            };
+            const customScrollUses = this.getCustomScrollUses();
+            this.equipment = new Equipment('Red Christmas Sock', equipmentStats, customScrollUses);
         } else {
             // 從配置中載入其他裝備
             const equipmentData = this.findEquipmentInConfig(equipmentName);
@@ -313,7 +322,7 @@ class ExtendedGameManager extends GameManager {
             equipmentImage.src = 'BWG.JPG';
             equipmentImage.alt = 'BWG';
         } else if (equipmentName === 'roa') {
-            equipmentImage.src = 'roa.JPG';
+            equipmentImage.src = 'ROA.JPG';
             equipmentImage.alt = 'ROA';
         } else if (equipmentName === 'spectrum-goggles') {
             equipmentImage.src = 'Spectrum Goggles.JPG';
@@ -324,6 +333,9 @@ class ExtendedGameManager extends GameManager {
         } else if (equipmentName === 'von-leon-belt') {
             equipmentImage.src = 'Von Leon\'s Belt.JPG';
             equipmentImage.alt = 'Von Leon\'s Belt';
+        } else if (equipmentName === 'red-christmas-sock') {
+            equipmentImage.src = 'Red Christmas Sock.JPG';
+            equipmentImage.alt = 'Red Christmas Sock';
         }
     }
 
@@ -352,7 +364,8 @@ class ExtendedGameManager extends GameManager {
             'roa': 'ROA',
             'spectrum-goggles': 'Spectrum Goggles',
             'stormcaster-gloves': 'Stormcaster Gloves',
-            'von-leon-belt': 'Von Leon\'s Belt'
+            'von-leon-belt': 'Von Leon\'s Belt',
+            'red-christmas-sock': 'Red Christmas Sock'
         };
         return nameMap[equipmentValue] || 'Blackfist Cloak';
     }
