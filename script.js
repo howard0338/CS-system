@@ -7,6 +7,7 @@ class Equipment {
         this.maxScrollUses = maxScrollUses;
         this.currentScrollUses = maxScrollUses;
         this.zeroStats = {}; // Record which values have dropped to 0
+        this.successfulCS = 0; // Track successful CS uses for this equipment
     }
 
     // Update stats (+5 to -5 random change, minimum 0, won't increase after dropping to 0)
@@ -405,22 +406,17 @@ class GameManager {
         if (isVlChaosScroll) {
             // VL CS 100% success, direct use
             const changes = this.equipment.updateStatsVL();
-            const oldScrollUses = this.equipment.currentScrollUses;
             this.equipment.useScroll();
-            const newScrollUses = this.equipment.currentScrollUses;
             
             // Record statistics
             this.statistics.vlCsUsed++;
+            this.equipment.successfulCS++; // Increment successful CS counter
             
             this.addLog('VL Chaos Scroll used successfully! Equipment stats changed:', 'success');
             this.logStatChanges(changes);
             
-            // Only show success when upgrade count decreases by 1
-            if (oldScrollUses - newScrollUses === 1) {
-                this.showSuccessEffect();
-            } else {
-                this.showFailureEffect(false);
-            }
+            // VL CS always succeeds, so always show success effect
+            this.showSuccessEffect();
         } else {
             // Regular CS, use original logic
             const scrollToUse = this.chaosScroll;
@@ -429,38 +425,26 @@ class GameManager {
             if (isSuccess) {
                 // Successfully used scroll
                 const changes = this.equipment.updateStats();
-                const oldScrollUses = this.equipment.currentScrollUses;
                 this.equipment.useScroll();
-                const newScrollUses = this.equipment.currentScrollUses;
                 
                 // Record statistics
                 this.statistics.csUsed++;
+                this.equipment.successfulCS++; // Increment successful CS counter
                 
                 this.addLog('Chaos Scroll used successfully! Equipment stats changed:', 'success');
                 this.logStatChanges(changes);
                 
-                // Only show success when upgrade count decreases by 1
-                if (oldScrollUses - newScrollUses === 1) {
-                    this.showSuccessEffect();
-                } else {
-                    this.showFailureEffect(false);
-                }
+                // Show success effect for successful scroll
+                this.showSuccessEffect();
             } else {
                 // Failed
                 this.statistics.csUsed++;
-                
-                const oldScrollUses = this.equipment.currentScrollUses;
                 this.equipment.useScroll();
-                const newScrollUses = this.equipment.currentScrollUses;
                 
                 this.addLog('Chaos Scroll failed, upgrade count -1', 'failure');
                 
-                // Only show success when upgrade count decreases by 1, otherwise show failure
-                if (oldScrollUses - newScrollUses === 1) {
-                    this.showSuccessEffect();
-                } else {
-                    this.showFailureEffect(true);
-                }
+                // Show failure effect for failed scroll
+                this.showFailureEffect(true);
             }
         }
 
@@ -485,9 +469,7 @@ class GameManager {
         if (isSuccess) {
             // Successfully used scroll
             const changes = isVlChaosScroll ? this.equipment.updateStatsVL() : this.equipment.updateStats();
-            const oldScrollUses = this.equipment.currentScrollUses;
             this.equipment.useScroll();
-            const newScrollUses = this.equipment.currentScrollUses;
             
             // Record statistics
             if (isVlChaosScroll) {
@@ -499,16 +481,15 @@ class GameManager {
                 this.statistics.wsUsed++;
             }
             
+            // Increment successful CS counter for this equipment
+            this.equipment.successfulCS++;
+            
             const scrollName = isVlChaosScroll ? 'VL Chaos Scroll' : 'Chaos Scroll';
             this.addLog(`${scrollName} used successfully! Equipment stats changed:`, 'success');
             this.logStatChanges(changes);
             
-            // Only show success when upgrade count decreases by 1
-            if (oldScrollUses - newScrollUses === 1) {
-                this.showSuccessEffect();
-            } else {
-                this.showFailureEffect(false);
-            }
+            // Show success effect for successful scroll
+            this.showSuccessEffect();
             
             if (useWhiteScroll) {
                 this.addLog('White Scroll protected the upgrade count!', 'info');
@@ -526,18 +507,12 @@ class GameManager {
                 // Failed but protected, only show brief failure effect
                 this.showFailureEffect(false);
             } else {
-                const oldScrollUses = this.equipment.currentScrollUses;
                 this.equipment.useScroll();
-                const newScrollUses = this.equipment.currentScrollUses;
                 
                 this.addLog('Chaos Scroll failed, upgrade count -1', 'failure');
                 
-                // Only show success when upgrade count decreases by 1, otherwise show failure
-                if (oldScrollUses - newScrollUses === 1) {
-                    this.showSuccessEffect();
-                } else {
-                    this.showFailureEffect(true);
-                }
+                // Show failure effect for failed scroll
+                this.showFailureEffect(true);
             }
         }
 
@@ -682,6 +657,9 @@ class GameManager {
         // Update scroll use count
         document.getElementById('scroll-uses').textContent = this.equipment.currentScrollUses;
         
+        // Update CS success counter
+        document.getElementById('equipment-cs-count').textContent = '+' + this.equipment.successfulCS;
+        
         // Update equipment background color
         this.updateEquipmentBackground();
         
@@ -773,6 +751,19 @@ class GameManager {
             if (totalStats >= 36) {
                 equipmentItem.classList.add('equipment-gold');
             } else if (totalStats >= 22) {
+                equipmentItem.classList.add('equipment-purple');
+            } else if (totalStats >= 6) {
+                equipmentItem.classList.add('equipment-blue');
+            }
+        } else if (equipmentName === 'ROA') {
+            // ROA color rules: based on sum of four attributes (STR, DEX, INT, LUK)
+            const str = this.equipment.stats.str || 0;
+            const dex = this.equipment.stats.dex || 0;
+            const int = this.equipment.stats.int || 0;
+            const luk = this.equipment.stats.luk || 0;
+            const totalStats = str + dex + int + luk;
+            
+            if (totalStats >= 20) {
                 equipmentItem.classList.add('equipment-purple');
             } else if (totalStats >= 6) {
                 equipmentItem.classList.add('equipment-blue');
@@ -901,6 +892,12 @@ class GameManager {
         // Create new equipment instance based on current equipment
         const equipmentName = this.getEquipmentDisplayName(currentEquipment);
         this.equipment = new Equipment(equipmentName, resetStats, resetScrollUses);
+        
+        // Set initial successful CS count for Von Leon's Belt
+        if (equipmentName === 'Von Leon\'s Belt') {
+            this.equipment.successfulCS = 1;
+        }
+        
         this.updateDisplay();
         this.addLog(`${equipmentName} reset to initial state, all stats restored. Upgrades available: ${resetScrollUses}`, 'info');
     }

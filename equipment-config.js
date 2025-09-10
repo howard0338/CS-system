@@ -210,6 +210,8 @@ class ExtendedGameManager extends GameManager {
             };
             const customScrollUses = this.getCustomScrollUses();
             this.equipment = new Equipment('Von Leon\'s Belt', equipmentStats, customScrollUses);
+            // Set initial successful CS count for Von Leon's Belt
+            this.equipment.successfulCS = 1;
         } else if (equipmentName === 'red-christmas-sock') {
             const customStats = this.getCustomStats();
             equipmentStats = Object.keys(customStats).length > 0 ? customStats : {
