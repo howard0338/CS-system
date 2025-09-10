@@ -169,6 +169,8 @@ class ExtendedGameManager extends GameManager {
             };
             const customScrollUses = this.getCustomScrollUses();
             this.equipment = new Equipment('BWG', equipmentStats, customScrollUses);
+            // Set initial successful CS count for BWG
+            this.equipment.successfulCS = 1;
         } else if (equipmentName === 'roa') {
             const customStats = this.getCustomStats();
             equipmentStats = Object.keys(customStats).length > 0 ? customStats : {

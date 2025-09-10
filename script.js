@@ -893,8 +893,8 @@ class GameManager {
         const equipmentName = this.getEquipmentDisplayName(currentEquipment);
         this.equipment = new Equipment(equipmentName, resetStats, resetScrollUses);
         
-        // Set initial successful CS count for Von Leon's Belt
-        if (equipmentName === 'Von Leon\'s Belt') {
+        // Set initial successful CS count for specific equipment
+        if (equipmentName === 'Von Leon\'s Belt' || equipmentName === 'BWG') {
             this.equipment.successfulCS = 1;
         }
         
