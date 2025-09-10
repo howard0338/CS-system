@@ -569,20 +569,7 @@ class GameManager {
         });
     }
 
-    // Show result flash
-    showResultFlash(text, type) {
-        const resultFlash = document.getElementById('result-flash');
-        const resultText = document.getElementById('result-text');
-        
-        resultText.textContent = text;
-        resultText.className = `result-text ${type}`;
-        
-        resultFlash.classList.add('show');
-        
-        setTimeout(() => {
-            resultFlash.classList.remove('show');
-        }, 500);
-    }
+    // Show result flash function removed - no longer displaying SUCCESS/FAIL text
 
     // Add log
     addLog(message, type = 'info') {
@@ -616,8 +603,7 @@ class GameManager {
             // No longer add persistent effects, let equipment return to normal state
         }, 100);
         
-        // Show success flash
-        this.showResultFlash('SUCCESS', 'success');
+        // Removed success flash - no longer showing SUCCESS text
     }
 
     // Show failure effect
@@ -637,8 +623,7 @@ class GameManager {
                 // No longer add persistent burned state, let equipment return to normal
             }, 2000);
             
-            // Show failure flash
-            this.showResultFlash('FAIL', 'failure');
+            // Removed failure flash - no longer showing FAIL text
         } else {
             // Brief failure effect (when protected)
             equipmentItem.classList.add('failure');

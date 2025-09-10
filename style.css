@@ -415,52 +415,7 @@ h2 {
     box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700, 0 0 90px #ffd700 !important;
 }
 
-/* 結果閃爍效果 */
-.result-flash {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.result-flash.show {
-    opacity: 1;
-}
-
-.result-text {
-    font-size: 3em;
-    font-weight: bold;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    animation: resultPulse 0.5s ease;
-}
-
-.result-text.success {
-    color: #4CAF50;
-}
-
-.result-text.failure {
-    color: #f44336;
-}
-
-@keyframes resultPulse {
-    0% {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
-}
+/* 結果閃爍效果已移除 - 不再顯示SUCCESS/FAIL文字 */
 
 /* 作者資訊樣式 */
 .author-info {
