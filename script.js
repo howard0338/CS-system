@@ -150,10 +150,12 @@ class GameManager {
         this.statistics = {
             csUsed: 0,
             vlCsUsed: 0,
-            wsUsed: 0
+            wsUsed: 0,
+            equipmentCount: 0
         };
         this.initializeEventListeners();
         this.updateDisplay();
+        this.updateStatistics(); // Ensure statistics are displayed on initialization
     }
 
     // Get custom stat values
@@ -526,6 +528,8 @@ class GameManager {
         document.getElementById('vl-cs-count').textContent = this.statistics.vlCsUsed;
         document.getElementById('ws-count').textContent = this.statistics.wsUsed;
         document.getElementById('total-scrolls').textContent = this.statistics.csUsed + this.statistics.vlCsUsed + this.statistics.wsUsed;
+        document.getElementById('equipment-count').textContent = this.statistics.equipmentCount;
+        console.log('Updating statistics, equipment count:', this.statistics.equipmentCount);
     }
 
     // Reset statistics
@@ -533,7 +537,8 @@ class GameManager {
         this.statistics = {
             csUsed: 0,
             vlCsUsed: 0,
-            wsUsed: 0
+            wsUsed: 0,
+            equipmentCount: 0
         };
         this.updateStatistics();
         this.addLog('Statistics reset to zero', 'info');
@@ -866,6 +871,9 @@ class GameManager {
 
     // Reset equipment (for testing)
     resetEquipment() {
+        console.log('resetEquipment function called');
+        console.log('Current equipment count before increment:', this.statistics.equipmentCount);
+        
         // Get currently selected equipment
         const equipmentSelect = document.getElementById('equipment-select');
         const currentEquipment = equipmentSelect ? equipmentSelect.value : 'blackfist-cloak';
@@ -882,6 +890,10 @@ class GameManager {
         if (equipmentName === 'Von Leon\'s Belt' || equipmentName === 'BWG') {
             this.equipment.successfulCS = 1;
         }
+        
+        // Increment equipment count when resetting
+        this.statistics.equipmentCount++;
+        console.log('Equipment count incremented to:', this.statistics.equipmentCount);
         
         this.updateDisplay();
         this.addLog(`${equipmentName} reset to initial state, all stats restored. Upgrades available: ${resetScrollUses}`, 'info');
@@ -922,7 +934,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'r' && e.ctrlKey) {
             e.preventDefault();
-            window.gameManager.resetEquipment();
+            if (window.gameManager) {
+                window.gameManager.resetEquipment();
+            }
         }
     });
     
@@ -944,8 +958,15 @@ document.addEventListener('DOMContentLoaded', () => {
         transition: all 0.3s ease;
     `;
     
+    console.log('Creating reset button');
+    
     resetButton.addEventListener('click', () => {
-        window.gameManager.resetEquipment();
+        console.log('Reset button clicked, gameManager:', window.gameManager);
+        if (window.gameManager) {
+            window.gameManager.resetEquipment();
+        } else {
+            console.error('gameManager not available');
+        }
     });
     
     resetButton.addEventListener('mouseenter', () => {
@@ -959,6 +980,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     document.body.appendChild(resetButton);
+    console.log('Reset button added to DOM');
 });
 
 // Direct setup drag events function

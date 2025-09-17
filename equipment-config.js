@@ -350,12 +350,23 @@ class ExtendedGameManager extends GameManager {
 
     // 重寫重置裝備方法
     resetEquipment() {
+        console.log('ExtendedGameManager resetEquipment function called');
+        console.log('Current equipment count before increment:', this.statistics.equipmentCount);
+        
         // 獲取當前選中的裝備
         const equipmentSelect = document.getElementById('equipment-select');
         const currentEquipment = equipmentSelect ? equipmentSelect.value : 'blackfist-cloak';
         
         // 重新載入當前裝備
         this.loadEquipment(currentEquipment);
+        
+        // 增加裝備計數
+        this.statistics.equipmentCount++;
+        console.log('Equipment count incremented to:', this.statistics.equipmentCount);
+        
+        // 更新統計顯示
+        this.updateStatistics();
+        
         this.addLog(`${this.getEquipmentDisplayName(currentEquipment)} reset to initial state, all stats restored.`, 'info');
     }
 
